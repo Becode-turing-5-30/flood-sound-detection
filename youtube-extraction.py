@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 import pandas as pd
+import numpy as np
 import youtube_dl
-
+# import time
 
 def extract_sound(file):
 
@@ -16,15 +17,20 @@ def extract_sound(file):
     titlely = ''
     ident = 0
 
-    df = pd.read_csv(file, header=None)
+    df = pd.read_csv(file, index_col=False)
     df.columns = ['url', 'start', 'end', 'label1', 'label2', 'label3', 'label4']
+    print (df.head())
+
 
     for row in df.index:
-        url = 'https://' + df.url[row]
+        url = 'https://youtu.be/' + df.url[row]
         print (url)
 
-        start_time = df.start[row]
-        end_time = df.end[row]
+        # start = int(df.start[row]
+        # end = df.end[row]
+
+        print(type(start))
+
         label1 = df.label1[row]
         label2 = df.label2[row]
         label3 = df.label3[row]
@@ -32,13 +38,13 @@ def extract_sound(file):
 
         titlely = label1
 
-        if label2 != ' ':
+        if not np.isnan(label2):
             titlely = titlely + '-' + label2
 
-        if label3 != ' ':
+        if not np.isnan(label3):
             titlely = titlely + '-' + label3
 
-        if label4 != ' ':
+        if not np.isnan(label4):
             titlely = titlely + '-' + label4
 
         titlely = titlely + '-' + str(ident)
@@ -47,22 +53,28 @@ def extract_sound(file):
         print (titlely)
 
         ydl_opts = {
-            'format': 'bestaudio/best',
+            'format': 'bestaudio[asr=44100]',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'wav',
             }],
             'outtmpl': f'sounds/{titlely}.%(ext)s',
-            'start_time': start_time,
-            'end_time': end_time,
+            'start_time': int(df.start[row]),
+            'end_time': int(df.end[row]),
         }
 
-        with youtube_dl.YoutubeDL (ydl_opts) as ydl:
-            ydl.download ([url])
+        try:
+            with youtube_dl.YoutubeDL (ydl_opts) as ydl:
+                ydl.download ([url])
+
+        except youtube_dl.utils.DownloadError:
+            continue
+
+        # time.sleep(1)
 
 
     return
 
 
-file = 'test2.csv'
+file = 'test4.csv'
 extract_sound ( file )
