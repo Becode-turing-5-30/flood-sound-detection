@@ -2,8 +2,17 @@ from __future__ import unicode_literals
 import pandas as pd
 import numpy as np
 import youtube_dl
+import os
+import subprocess
+
+
 # import time
 
+def cut_sound(file:str, start=0, duration=10) -> None:
+    subprocess.call(['ffmpeg', '-y','-ss', str(start),  '-i', str(file), '-t', str(duration), f'{file}_cut.wav'])
+    os.remove(file)
+    os.rename(f'{file}_cut.wav', file)
+    
 def extract_sound(file):
 
     url = ''
@@ -31,6 +40,8 @@ def extract_sound(file):
 
         print(type(start))
 
+        start_time = df.start[row]
+        end_time = df.end[row]
         label1 = df.label1[row]
         label2 = df.label2[row]
         label3 = df.label3[row]
@@ -59,22 +70,21 @@ def extract_sound(file):
                 'preferredcodec': 'wav',
             }],
             'outtmpl': f'sounds/{titlely}.%(ext)s',
-            'start_time': int(df.start[row]),
-            'end_time': int(df.end[row]),
+            # 'playliststart': int(start_time),
+            # 'playlistend': int(end_time),
+            # 'duration': 10
         }
 
         try:
             with youtube_dl.YoutubeDL (ydl_opts) as ydl:
-                ydl.download ([url])
+                ydl.download([url])
+            cut_sound(f'sounds/{titlely}.wav', start_time)
 
         except youtube_dl.utils.DownloadError:
             continue
 
-        # time.sleep(1)
-
-
     return
 
 
-file = 'test4.csv'
+file = 'test1.csv'
 extract_sound ( file )
