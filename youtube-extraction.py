@@ -8,7 +8,7 @@ import subprocess
 
 # import time
 
-def cut_sound(file:str, start=0, duration=10) -> None:
+def cut_sound(file:str, start:int=0, duration:int=10) -> None:
     subprocess.call(['ffmpeg', '-y','-ss', str(start),  '-i', str(file), '-t', str(duration), f'{file}_cut.wav'])
     os.remove(file)
     os.rename(f'{file}_cut.wav', file)
@@ -18,12 +18,6 @@ def extract_sound(file):
     url = ''
     start = 0
     end = 0
-    label1 = ''
-    label2 = ''
-    label3 = ''
-    label4 = ''
-
-    titlely = ''
     ident = 0
 
     df = pd.read_csv(file, index_col=False)
@@ -47,7 +41,10 @@ def extract_sound(file):
         label3 = df.label3[row]
         label4 = df.label4[row]
 
-        titlely = label1
+        titlely = ''
+
+        if not np.isnan(label1):
+            titlely = titlely + label1
 
         if not np.isnan(label2):
             titlely = titlely + '-' + label2
@@ -70,9 +67,6 @@ def extract_sound(file):
                 'preferredcodec': 'wav',
             }],
             'outtmpl': f'sounds/{titlely}.%(ext)s',
-            # 'playliststart': int(start_time),
-            # 'playlistend': int(end_time),
-            # 'duration': 10
         }
 
         try:
@@ -86,5 +80,5 @@ def extract_sound(file):
     return
 
 
-file = 'test1.csv'
+file = 'URL/test.csv'
 extract_sound ( file )
