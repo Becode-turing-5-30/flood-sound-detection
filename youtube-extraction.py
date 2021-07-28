@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import youtube_dl
 import os
-import subprocess
+
 from sklearn.utils import shuffle
+
 
 
 # import time
@@ -15,7 +16,9 @@ def cut_sound(file:str, start=0, duration=10) -> None:
     os.rename(f'{file}_cut.wav', file)
     
 def extract_sound(file):
+
     np.random.seed(0)
+
     url = ''
     start = 0
     end = 0
@@ -28,11 +31,12 @@ def extract_sound(file):
     ident = 0
 
     df = pd.read_csv(file, index_col=False)
-    df.drop(columns='Unnamed: 0', errors='ignore', inplace=True)
+
     df.fillna(' ', inplace=True)
     df.columns = ['url', 'start', 'end', 'label1', 'label2', 'label3', 'label4']
     df = shuffle(df)
     print(df.head())
+
 
 
     for row in df.index:
@@ -43,7 +47,6 @@ def extract_sound(file):
         # end = df.end[row]
 
 
-
         start_time = df.start[row]
         end_time = df.end[row]
         label1 = df.label1[row]
@@ -52,6 +55,7 @@ def extract_sound(file):
         label4 = df.label4[row]
 
         titlely = label1
+
 
         if label2!= ' ':
             titlely = titlely + '-' + label2
@@ -92,3 +96,4 @@ def extract_sound(file):
 
 file = 'database1.csv'
 extract_sound ( file )
+
