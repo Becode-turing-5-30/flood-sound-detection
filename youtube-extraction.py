@@ -12,6 +12,15 @@ def cut_sound(file:str, start:int=0, duration:int=10) -> None:
     subprocess.call(['ffmpeg', '-y','-ss', str(start),  '-i', str(file), '-t', str(duration), f'{file}_cut.wav'])
     os.remove(file)
     os.rename(f'{file}_cut.wav', file)
+
+def list_to_str_unique(labels:list)-> str:
+    print(labels)
+    cleaned_list = np.unique([x for x in labels if str(x) != 'nan']).tolist()
+    for i, x in enumerate(cleaned_list):
+      if x.lower() == 'stream':
+        cleaned_list.insert(0, cleaned_list.pop(i))
+  
+    return '-'.join(cleaned_list)
     
 def extract_sound(file):
 
@@ -29,36 +38,19 @@ def extract_sound(file):
         url = 'https://youtu.be/' + df.url[row]
         print (url)
 
-        # start = int(df.start[row]
-        # end = df.end[row]
-
-        print(type(start))
-
         start_time = df.start[row]
         end_time = df.end[row]
-        label1 = df.label1[row]
-        label2 = df.label2[row]
-        label3 = df.label3[row]
-        label4 = df.label4[row]
 
-        titlely = ''
+        labels = [df.label1[row], df.label2[row], df.label3[row], df.label4[row]]
 
-        if not np.isnan(label1):
-            titlely = titlely + label1
-
-        if not np.isnan(label2):
-            titlely = titlely + '-' + label2
-
-        if not np.isnan(label3):
-            titlely = titlely + '-' + label3
-
-        if not np.isnan(label4):
-            titlely = titlely + '-' + label4
-
+        titlely = list_to_str_unique(labels)
+        
         titlely = titlely + '-' + str(ident)
+        
+        print (titlely)
+        
         ident += 1
 
-        print (titlely)
 
         ydl_opts = {
             'format': 'bestaudio[asr=44100]',
@@ -68,6 +60,9 @@ def extract_sound(file):
             }],
             'outtmpl': f'sounds/{titlely}.%(ext)s',
         }
+        if os.path.isfile(f'sounds/{titlely}.wav'):
+            print('file already exists')
+            continue
 
         try:
             with youtube_dl.YoutubeDL (ydl_opts) as ydl:
@@ -80,5 +75,5 @@ def extract_sound(file):
     return
 
 
-file = 'URL/test.csv'
+file = 'URL/df_10.csv'
 extract_sound ( file )
