@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 import youtube_dl
 import os
-import subprocess
+
+from sklearn.utils import shuffle
+
 
 
 # import time
@@ -24,14 +26,20 @@ def list_to_str_unique(labels:list)-> str:
     
 def extract_sound(file):
 
+    np.random.seed(0)
+
     url = ''
     start = 0
     end = 0
     ident = 0
 
     df = pd.read_csv(file, index_col=False)
+
+    df.fillna(' ', inplace=True)
     df.columns = ['url', 'start', 'end', 'label1', 'label2', 'label3', 'label4']
-    print (df.head())
+    df = shuffle(df)
+    print(df.head())
+
 
 
     for row in df.index:
@@ -77,3 +85,4 @@ def extract_sound(file):
 
 file = 'URL/df_3540.csv'
 extract_sound ( file )
+
