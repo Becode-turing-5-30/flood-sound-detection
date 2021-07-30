@@ -13,7 +13,6 @@ def predict(filename):
     model_xgb = xgb.XGBClassifier()
     model_xgb.load_model("xgboost_model.json")
     preds = model_xgb.predict(yamnet_feat.numpy())
-    print(preds)
     if sum(preds)>len(preds)/2:
         return 1
     else:
