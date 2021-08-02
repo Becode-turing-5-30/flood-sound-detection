@@ -46,7 +46,7 @@ def load_wav_for_map(filename, label, fold):
 
 uploaded_file = st.file_uploader("Choose a wav file ")
 left_column, right_column = st.beta_columns(2)
-pressed = left_column.button('Category of the file:')
+pressed = left_column.button('Warning:')
 if pressed:
     if not uploaded_file:
         right_column.write('Please, upload a file')
@@ -55,6 +55,3 @@ if pressed:
         label_category = "Flooding Warning" if label==0 else "No Warning"
         right_column.write(f'{label_category}')
 
-'''
-    More details and the python codes are available [on my GitHub](https://github.com/Nathanael-Mariaule/Document-Clustering)
-'''
