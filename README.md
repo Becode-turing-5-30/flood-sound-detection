@@ -1,9 +1,12 @@
 # Flood sound detection (Mini-Hackaton)
-
+## Description
+We had a mini-hackaton to find an AI application to flooding.
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+We choose a learning process to do something we didn't know: using sounds and tensorflow to create a Machine Learning capable of sound recognition, for example detect the sounds of floodings at night and if there is flooding then send and alert.
 
+## Brief
 ### Mini-Hackaton : Flooding and Artificial Intelligence.
 
 - Repository: `flooding-ai`
