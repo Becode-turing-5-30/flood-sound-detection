@@ -1,4 +1,4 @@
-# Flood sound detection (Mini-Hackaton)
+# Flood sound detection (Mini-Hackathon)
 ## Description
 We had a mini-hackaton to find an AI application to flooding.
 
